@@ -1,4 +1,13 @@
 #A wordle application that uses the same dictionary as the New York Times online game 'Wordle'
+#DATA FROM EACH ROUND IS STORED IN:
+# 1.) ALL guesses is 'guesses_data.txt'
+#     -> a list of guesses per round is 'guesses_per_round.txt'
+# 2.) number of guesses to solve is 'num_guesses_data.txt
+# 3.) number of times they guessed each letter is 'letters_guessed_per_round.txt'
+#**These lists (guesses_per_round, num_guesses_data, letters_guessed_per_round)
+#   will include the same number of indexes because each round adds a line to each list 
+#   so can be copy/pasted side by side and each row will correspond to a round
+
 import random
 from random import randint
 
@@ -17,8 +26,8 @@ for word in answersFile:
     possible_solutions.append(word.lower())
 
 #display a welcome message & wait for yes/no from user, respond accordingly
-print(open('welcome_message.txt').read())
-print(open('instructions.txt').read())
+print('\n\n\n' + open('welcome_message.txt').read())
+print('\n' + open('instructions.txt').read())
 
 #initialize all the needed variables
 numTimesPlayed = 0
@@ -47,11 +56,13 @@ def check_ready(resp):
             initialize()
         else: 
             print(f'Great! Here we go for round {numTimesPlayed + 1}.')
+            save()
             reset()
             initialize()
 
     elif resp == 'no':
          print('Sorry to see you go!')
+         save()
          quit()
     else: 
         print('Please say yes or no.')
@@ -61,9 +72,9 @@ def check_ready(resp):
 #performs all the actions that update data when the user makes an incorrect guess
 def wrong_guess(guess):
     global guessed_correct_letters
-    global guessed_incorrect_letters
     global solution
     global solution_letters
+    global numGuesses
 
     guessed_letters = []
 
@@ -109,7 +120,7 @@ def wrong_guess(guess):
         # -> update the remaining letters lists and remove this_letter from whichever list it is in (if at all)   
         # -> make guessed_letters_temp reflect this    
         elif not this_letter in solution_letters: 
-                guessed_letters_temp[i] = f'-{this_letter}-'
+                guessed_letters_temp[i] = f'/{this_letter}/'
                 #update this index of guessed_correct_letters to be blank if there isnt a correct letter there already
                 if guessed_correct_letters[i] == '_' or '*' in guessed_correct_letters[i]:
                     guessed_correct_letters[i] = '_'
@@ -140,6 +151,7 @@ def wrong_guess(guess):
     if numGuesses <= 5:
         print(f'\n----------+----------\nIncorrect :( \n{6 - numGuesses} guesses remaining!\n')
     elif numGuesses == 6:
+        numGuesses += 1
         print(f'\n----------+----------\nAll guesses used! The answer was: {solution}. \n----------+----------\n\nDo you want to play again?')
         check_ready(input().lower())
         
@@ -219,13 +231,31 @@ def reset():
        solution_letters.append(solution[k])
        k+=1
 
+def save():
+    global guesses
+    
+    lol = []
+    list_of_guesses_file = open("guesses_data.txt", "a")
+    guesses_per_round_file = open("guesses_per_round.txt", "a")
+    for g in guesses:
+        list_of_guesses_file.write(f'\n{g}')
+        guesses_per_round_file.write(f'{g} ')
+        for l in g:
+            lol.append(l)
+    
+    num_guesses_file = open("num_guesses_data.txt", "a")
+    if numGuesses <=6:
+        num_guesses_file.write(f'\n{numGuesses}')
+    else: num_guesses_file.write('\nX')
+    
+    list_of_letters_file = open("letters_guessed_per_round.txt", "a")
+    list_of_letters_file.write('\n')
+    for l in lol:
+        list_of_letters_file.write(f'{l} ')
+    
 if numTimesPlayed == 0:
     check_ready(input().lower())
 
 
 
 
-# 1.) list of guesses
-# 2.) number of guesses 
-# 3.) whether they got the answer or not 
-# 4.) number of times they guessed each letter
