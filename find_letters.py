@@ -1,6 +1,18 @@
-#Script to find num times a letter occurs in the dictionary
+#Script to find num times a letter occurs in the given file
 
-letters = {'a': {'num_occur': 0},
+# finds the amount of times every letter occurs in the dictionary 
+#consumes the name of a file {string} and an optional output type {string} 
+#output type is one of: 'table', 'list'
+#output type defaults to table if no argument given
+def find_letters(file_, output_type='table'):
+    
+    this_file = open(file_).read().splitlines()
+    alph = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    this_list = []
+    
+
+    this_letters = {
+           'a': {'num_occur': 0},
            'b': {'num_occur': 0}, 
            'c': {'num_occur': 0},
            'd': {'num_occur': 0},
@@ -27,26 +39,13 @@ letters = {'a': {'num_occur': 0},
            'y': {'num_occur': 0},
            'z': {'num_occur': 0}
            }
-
-alph = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-
-file_ = open('dictionary.txt').read().splitlines()
-
-wordleDictionary = []
-
-for line in file_:
-    word = str(line)
-    wordleDictionary.append(word.lower())
-
-print('----------------------------------------+---------------------------------------- \n' + 
-      'The dictionary being used: \n\n' + format(wordleDictionary) + 
-      '\n\n ----------------------------------------+----------------------------------------\n')
-
-# finds the amount of times every letter occurs in the dictionary 
-def find_letters():
     
+    for line in this_file:
+        word = str(line)
+        this_list.append(word.lower())
+        
     #iterate through the dictionary 
-    for word in wordleDictionary:
+    for word in this_list:
         
         #for loop inside for loop - 
         #    - (for each word in dictionary) iterate through the alphabet (alph)
@@ -54,13 +53,14 @@ def find_letters():
         #    - update 'letters' table accordingly
         for letter in alph:
             c = word.count(letter)
-            letters[letter]['num_occur'] += c
+            this_letters[letter]['num_occur'] += c
+     
+    if output_type == 'table':
+             return this_letters    
+    elif output_type == 'list':
+        prnt_list = []
+        for l in alph:
+            prnt_list.append(this_letters[l]['num_occur'])
+        return prnt_list
 
-print('letters table before: \n' + format(letters) + 
-      '\n\n ----------------------------------------+----------------------------------------\n')
 
-find_letters()
-
-print('letters table after: \n' + format(letters) + 
-      '\n\n ----------------------------------------+----------------------------------------\n')
-        

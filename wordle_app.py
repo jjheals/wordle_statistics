@@ -9,7 +9,9 @@
 #   so can be copy/pasted side by side and each row will correspond to a round
 
 import random
+import __future__
 from random import randint
+from prompt_toolkit import print_formatted_text, HTML
 
 #import the wordle dictionary & convert to a list
 dictFile = open('dictionary.txt').read().splitlines()
@@ -18,28 +20,28 @@ answersFile = open('answers.txt').read().splitlines()
 wordleDictionary = []
 for word in dictFile:
     word = str(word)
-    wordleDictionary.append(word.lower())
+    wordleDictionary.append(word.upper())
 
 possible_solutions = []
 for word in answersFile:
     word = str(word)
-    possible_solutions.append(word.lower())
+    possible_solutions.append(word.upper())
 
 #display a welcome message & wait for yes/no from user, respond accordingly
-print('\n\n\n' + open('welcome_message.txt').read())
-print('\n' + open('instructions.txt').read())
+print_formatted_text(HTML('\n\n\n' + open('welcome_message.txt').read()))
+print_formatted_text(HTML('\n' + open('instructions.txt').read()))
 
 #initialize all the needed variables
 numTimesPlayed = 0
 guesses = []
 guessed_already_lol = []
 numGuesses = 0
-solution = possible_solutions[randint(0, len(possible_solutions) - 1)]
+solution = possible_solutions[randint(0, len(possible_solutions) - 1)].upper()
 guessed_correct_letters = ['_','_','_','_','_']
 solution_letters = []
-remaining_letters1 = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']
-remaining_letters2 = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l']
-remaining_letters3 = ['z', 'x', 'c', 'v', 'b', 'n', 'm']
+remaining_letters1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P']
+remaining_letters2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L']
+remaining_letters3 = ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
 
 k=0
 while k <= 4:
@@ -50,7 +52,7 @@ while k <= 4:
 #function to check if the user replied with yes or no to a previous statement
 #if no, quits the program
 def check_ready(resp):
-    if resp == 'yes':
+    if resp == 'YES':
         if numTimesPlayed == 0:
             print('Great! Here we go.')  
             initialize()
@@ -60,13 +62,13 @@ def check_ready(resp):
             reset()
             initialize()
 
-    elif resp == 'no':
+    elif resp == 'NO':
          print('Sorry to see you go!')
          save()
          quit()
     else: 
         print('Please say yes or no.')
-        check_ready(input().lower())
+        check_ready(input().upper())
 
 #wrong_guess(string)
 #performs all the actions that update data when the user makes an incorrect guess
@@ -95,34 +97,34 @@ def wrong_guess(guess):
         #if this_letter is at the exact spot in solution_letters 
         # -> make guessed_correct_letters & guessed_letters_temp reflect this
         if this_letter == solution_letters[i]:
-            guessed_letters_temp[i] = this_letter
-            guessed_correct_letters[i] = solution_letters[i]
+            guessed_letters_temp[i] = f'<b>{this_letter}</b>'
+            guessed_correct_letters[i] = f'<b>{solution_letters[i]}</b>'
             
             # {nested within if this_letter is at the exact spot in solution_letters} 
             # if guessed_correct_letters already includes this_letter with '*'
             # -> reset this index in guessed_correct_letters to '_'
-            if this_letter + '*' in guessed_correct_letters:
-                guessed_correct_letters[guessed_correct_letters.index(solution_letters[i] + '*')] = '_'
+            if f'<i>{this_letter}</i>' in guessed_correct_letters:
+                guessed_correct_letters[guessed_correct_letters.index(f'<i>{solution_letters[i]}</i>')] = '_'
                 
         #else if this_letter is not at the right spot in solution_letters BUT it is in solution_letters at a different index
         # -> add this_letter with '*' to the right index in guessed_correct_letters
         # -> add this_letter with '*' to the right index in guessed_letters_temp          
         elif this_letter != solution_letters[i] and this_letter in solution_letters:
-            guessed_letters_temp[i] = this_letter + '*'
+            guessed_letters_temp[i] = f'<i>{this_letter}</i>'
             
-            if this_letter + '*' in guessed_correct_letters and guessed_correct_letters[i] != f'{this_letter}*':
-                rem = guessed_correct_letters.index(this_letter + '*')
+            if f'<i>{this_letter}</i>' in guessed_correct_letters and guessed_correct_letters[i] != f'<i>{this_letter}</i>':
+                rem = guessed_correct_letters.index(f'<i>{this_letter}</i>')
                 guessed_correct_letters[rem] = '_'
             if not this_letter in guessed_correct_letters: 
-                guessed_correct_letters[i] = this_letter + '*'
+                guessed_correct_letters[i] = f'<i>{this_letter}</i>'
         
         #else if this_letter is not in solution letters at all
         # -> update the remaining letters lists and remove this_letter from whichever list it is in (if at all)   
         # -> make guessed_letters_temp reflect this    
         elif not this_letter in solution_letters: 
-                guessed_letters_temp[i] = f'/{this_letter}/'
+                guessed_letters_temp[i] = f'<s>{this_letter}</s>'
                 #update this index of guessed_correct_letters to be blank if there isnt a correct letter there already
-                if guessed_correct_letters[i] == '_' or '*' in guessed_correct_letters[i]:
+                if guessed_correct_letters[i] == '_' or f'<i>{this_letter}</i>' in guessed_correct_letters[i]:
                     guessed_correct_letters[i] = '_'
                     
                 #if the incorrect letter is in the first list of remaining letters
@@ -144,7 +146,7 @@ def wrong_guess(guess):
         n = 1
         print('\nGuessed already:')
         for g in lst:
-            print(f'{n}. {g}')
+            print_formatted_text(HTML(f'{n}. {g[0]} {g[1]} {g[2]} {g[3]} {g[4]}'))
             n+=1
             
     #prompt next guess
@@ -153,17 +155,19 @@ def wrong_guess(guess):
     elif numGuesses == 6:
         numGuesses += 1
         print(f'\n----------+----------\nAll guesses used! The answer was: {solution}. \n----------+----------\n\nDo you want to play again?')
-        check_ready(input().lower())
+        check_ready(input().upper())
         
     #add guessed_letters_temp to guessed_already_lol
     guessed_already_lol.append(guessed_letters_temp)
     
     #output
     prnt(guessed_already_lol)
-    print(f'\nRemaining letters: \n{remaining_letters1}\n  {remaining_letters2}\n     {remaining_letters3}')
-    print('\n\nKnown: ' + format(guessed_correct_letters) + '\n----------+----------\n')
+    print(f'\nRemaining letters: \n\n{remaining_letters1[0]} {remaining_letters1[1]} {remaining_letters1[2]} {remaining_letters1[3]} {remaining_letters1[4]} {remaining_letters1[5]} {remaining_letters1[6]} {remaining_letters1[7]} {remaining_letters1[8]} {remaining_letters1[9]}')
+    print(f' {remaining_letters2[0]} {remaining_letters2[1]} {remaining_letters2[1]} {remaining_letters2[2]} {remaining_letters2[3]} {remaining_letters2[4]} {remaining_letters2[5]} {remaining_letters2[6]} {remaining_letters2[7]} {remaining_letters2[8]}')      
+    print(f'   {remaining_letters3[0]} {remaining_letters3[1]} {remaining_letters3[2]} {remaining_letters3[3]} {remaining_letters3[4]} {remaining_letters3[5]} {remaining_letters3[6]}')
+    print_formatted_text(HTML(f'\n\nKnown:\n\n{guessed_correct_letters[0]} {guessed_correct_letters[1]} {guessed_correct_letters[2]} {guessed_correct_letters[3]} {guessed_correct_letters[4]}' + '\n----------+----------\n'))
     
-    capture_guess(input().lower())
+    capture_guess(input().upper())
     
     
 
@@ -173,9 +177,9 @@ def check_guess(guess):
 
     numGuesses += 1
 
-    if guess.lower() == solution:
+    if guess.upper() == solution:
         print(f'\nCongratulations! The word was {solution}\n' + 'Do you want to play again?')
-        check_ready(input().lower())
+        check_ready(input().upper())
 
     else: return False
 
@@ -184,13 +188,13 @@ def capture_guess(guess):
 
     if len(guess) != 5:
         print('Incorrect number of letters! Try again with 5 letters.')
-        capture_guess(input().lower())
+        capture_guess(input().upper())
 
     if guess not in wordleDictionary:
         print('Word not recognized. Please try another word.')
-        capture_guess(input().lower())
+        capture_guess(input().upper())
 
-    guesses.append(guess.lower())
+    guesses.append(guess.upper())
 
     if not check_guess(guess):
         wrong_guess(guess)
@@ -201,7 +205,7 @@ def initialize():
     numTimesPlayed += 1
     print('Choosing a word ...')
     print('Alright, take your best guess!')
-    capture_guess(input().lower())
+    capture_guess(input().upper())
 
 def reset():
     global guesses
@@ -220,10 +224,9 @@ def reset():
     guessed_correct_letters = ['_','_','_','_','_']
     guessed_already_lol = []
     solution_letters = []
-    remaining_letters1 = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']
-    remaining_letters2 = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l']
-    remaining_letters3 = ['z', 'x', 'c', 'v', 'b', 'n', 'm']
-
+    remaining_letters1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P']
+    remaining_letters2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L']
+    remaining_letters3 = ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
     #create a list that holds each letter of the solution
     solution_letters = []
     k=0
@@ -233,10 +236,12 @@ def reset():
 
 def save():
     global guesses
+    global numGuesses
     
     lol = []
     list_of_guesses_file = open("guesses_data.txt", "a")
     guesses_per_round_file = open("guesses_per_round.txt", "a")
+    guesses_per_round_file.write('\n')
     for g in guesses:
         list_of_guesses_file.write(f'\n{g}')
         guesses_per_round_file.write(f'{g} ')
@@ -252,9 +257,9 @@ def save():
     list_of_letters_file.write('\n')
     for l in lol:
         list_of_letters_file.write(f'{l} ')
-    
+
 if numTimesPlayed == 0:
-    check_ready(input().lower())
+   check_ready(input().upper())
 
 
 
