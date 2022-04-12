@@ -163,7 +163,7 @@ def wrong_guess(guess):
     #output
     prnt(guessed_already_lol)
     print(f'\nRemaining letters: \n\n{remaining_letters1[0]} {remaining_letters1[1]} {remaining_letters1[2]} {remaining_letters1[3]} {remaining_letters1[4]} {remaining_letters1[5]} {remaining_letters1[6]} {remaining_letters1[7]} {remaining_letters1[8]} {remaining_letters1[9]}')
-    print(f' {remaining_letters2[0]} {remaining_letters2[1]} {remaining_letters2[1]} {remaining_letters2[2]} {remaining_letters2[3]} {remaining_letters2[4]} {remaining_letters2[5]} {remaining_letters2[6]} {remaining_letters2[7]} {remaining_letters2[8]}')      
+    print(f' {remaining_letters2[0]} {remaining_letters2[1]} {remaining_letters2[2]} {remaining_letters2[3]} {remaining_letters2[4]} {remaining_letters2[5]} {remaining_letters2[6]} {remaining_letters2[7]} {remaining_letters2[8]}')      
     print(f'   {remaining_letters3[0]} {remaining_letters3[1]} {remaining_letters3[2]} {remaining_letters3[3]} {remaining_letters3[4]} {remaining_letters3[5]} {remaining_letters3[6]}')
     print_formatted_text(HTML(f'\n\nKnown:\n\n{guessed_correct_letters[0]} {guessed_correct_letters[1]} {guessed_correct_letters[2]} {guessed_correct_letters[3]} {guessed_correct_letters[4]}' + '\n----------+----------\n'))
     
