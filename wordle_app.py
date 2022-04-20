@@ -8,7 +8,6 @@
 #   will include the same number of indexes because each round adds a line to each list 
 #   so can be copy/pasted side by side and each row will correspond to a round
 
-import random
 import __future__
 from random import randint
 from prompt_toolkit import print_formatted_text, HTML
@@ -103,20 +102,20 @@ def wrong_guess(guess):
             # {nested within if this_letter is at the exact spot in solution_letters} 
             # if guessed_correct_letters already includes this_letter with '*'
             # -> reset this index in guessed_correct_letters to '_'
-            if f'<i>{this_letter}</i>' in guessed_correct_letters:
-                guessed_correct_letters[guessed_correct_letters.index(f'<i>{solution_letters[i]}</i>')] = '_'
+            if f'<i>*{this_letter}</i>' in guessed_correct_letters:
+                guessed_correct_letters[guessed_correct_letters.index(f'<i>*{solution_letters[i]}</i>')] = '_'
                 
         #else if this_letter is not at the right spot in solution_letters BUT it is in solution_letters at a different index
         # -> add this_letter with '*' to the right index in guessed_correct_letters
         # -> add this_letter with '*' to the right index in guessed_letters_temp          
         elif this_letter != solution_letters[i] and this_letter in solution_letters:
-            guessed_letters_temp[i] = f'<i>{this_letter}</i>'
+            guessed_letters_temp[i] = f'<i>*{this_letter}</i>'
             
-            if f'<i>{this_letter}</i>' in guessed_correct_letters and guessed_correct_letters[i] != f'<i>{this_letter}</i>':
-                rem = guessed_correct_letters.index(f'<i>{this_letter}</i>')
+            if f'<i>*{this_letter}</i>' in guessed_correct_letters and guessed_correct_letters[i] != f'<i>*{this_letter}</i>':
+                rem = guessed_correct_letters.index(f'<i>*{this_letter}</i>')
                 guessed_correct_letters[rem] = '_'
             if not this_letter in guessed_correct_letters: 
-                guessed_correct_letters[i] = f'<i>{this_letter}</i>'
+                guessed_correct_letters[i] = f'<i>*{this_letter}</i>'
         
         #else if this_letter is not in solution letters at all
         # -> update the remaining letters lists and remove this_letter from whichever list it is in (if at all)   
@@ -124,7 +123,7 @@ def wrong_guess(guess):
         elif not this_letter in solution_letters: 
                 guessed_letters_temp[i] = f'<s>{this_letter}</s>'
                 #update this index of guessed_correct_letters to be blank if there isnt a correct letter there already
-                if guessed_correct_letters[i] == '_' or f'<i>{this_letter}</i>' in guessed_correct_letters[i]:
+                if guessed_correct_letters[i] == '_' or f'<i>*{this_letter}</i>' in guessed_correct_letters[i]:
                     guessed_correct_letters[i] = '_'
                     
                 #if the incorrect letter is in the first list of remaining letters
