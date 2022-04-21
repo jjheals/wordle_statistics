@@ -1,0 +1,12 @@
+<b>Instructions:</b>
+- Guesses must be 5 letters
+- In the remaining letters, letters that you have guessed correctly will still appear
+  because these letters CAN appear again in the solution
+- In the 'Known' output and 'Already guessed' list: 
+	-> letters that are NOT anywhere in the solution will appear as <s>strikethrough</s>
+	-> letters that are in the solution but guessed in the wrong place will appear as <i>italic</i>
+	-> letters that are guessed in the correct place as in the solution will appear as <b>bold</b>
+	-> Example: 'crate'
+		Known: <s>b</s> <b>r</b> <i>e</i> <i>a</i> <s>k</s>
+
+Ready to begin? [Yes/No]

@@ -1,0 +1,6 @@
+Hello! This is a makeshift Wordle application so we can collect data on those who play it, such as:
+ - Words guessed
+ - Starting word
+ - Number of guesses to solve
+
+**All data is stored in a separate file and the counts are reset after each round**
