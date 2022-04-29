@@ -99,16 +99,12 @@ def model1_find_optimal_words(dictionary_fileName, list_of_solutions_fileName):
                     letter_num_occur_table[letter] += 1
 
         #convert to percents to normalize 
-        # --> gives the probability that a random letter from the alphabet will be a given letter from the list of solutions
-        # --> this probability based on randomness allows us to do statistical analysis and use the data for predictions
     for letter in alph: 
         letter_num_occur_table[letter] = (letter_num_occur_table[letter] / (len(list_of_solutions)*5)) * 100
 
     # ----- sort the words into lists based on the mean sum(%) ----- #
 
-    #update the word_per_letter
-        # --> give the probability that ANY of the 5 letters in the word will be a given letter in the list of solutions
-        # --> this probability based on randomness allows us to do statistical analysis and use the data for predictions
+        #update the word_per_letter
     for word in dictionary:
         word_per_letter_total_occur[word] = 0
         for letter in word:
@@ -199,7 +195,8 @@ def model2_find_optimal_words(dictionary_fileName, letters_per_round_fileName, g
             num2 = int(line)
             numGuesses_per_round.append(num2)
 
-    #create dic of avg SR of each letter from letters_per_round and numGuesses_per_round
+    #create dic of avg SR of each letter from letters_per_round 
+    #and numGuesses_per_round
     letter_avg_SR_dict = {} 
     temp_num_occur_dict = {}
 
